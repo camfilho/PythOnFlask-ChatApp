@@ -38,7 +38,7 @@
   </head>
   <body class="light-green">
     <header>
-      <h1><strong>Welcome, {{ username }}!</strong></h1>
+      <h1><strong>Whats Up, {{ username }}?</strong></h1>
     </header>
     <div class="container">
       <div class="row grey lighten-2 text-box">
@@ -62,8 +62,8 @@
         var source = new EventSource('/stream');
         var out = document.getElementById('out');
           source.onmessage = function(e) {
-        // XSS in chat is fun
-        out.innerHTML =  e.data + '<br>' + out.innerHTML;
+    
+        out.innerHTML = out.innerHTML + e.data + '<br>';
         };
       }
       $('#in').keyup(function(e){
