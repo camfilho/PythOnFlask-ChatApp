@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chat Room</title>
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <form>
+      
+    </form>
+
+
+    <script>
+      function sse() {
+      var source = new EventSource('/stream');
+      var out = document.getElementById('out');
+      source.onmessage = function(e) {
+      // XSS in chat is fun
+      out.innerHTML =  e.data + '\\n' + out.innerHTML;
+      };
+      }
+      $('#in').keyup(function(e){
+      if (e.keyCode == 13) {
+      $.post('/post', {'message': $(this).val()});
+      $(this).val('');
+      }
+      });
+      sse();
+    </script>
+
+  </body>
+</html>

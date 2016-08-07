@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chat Room</title>
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+       <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <style media="screen">
+       .text-box {
+         width: 100%;
+         height: 30em;
+         overflow-y: auto;
+         margin-bottom: 0px;
+       }
+       .text-box-write {
+         width: 100%;
+         marign: 0px;
+         padding: 0px;
+       }
+
+       ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+           color:    black;
+       }
+       :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+          color:    black;
+          opacity:  1;
+       }
+       ::-moz-placeholder { /* Mozilla Firefox 19+ */
+          color:    black;
+          opacity:  1;
+       }
+       :-ms-input-placeholder { /* Internet Explorer 10-11 */
+          color:    #909;
+       }
+
+     </style>
+  </head>
+  <body class="light-green">
+    <header>
+      <h1><strong>Welcome, {{ username }}!</strong></h1>
+    </header>
+    <div class="container">
+      <div class="row grey lighten-2 text-box">
+        <div class="col s8 offset-s2">
+          <pre id="out"></pre>
+      </div>
+      </div>
+      <div class="row text-box-write">
+        <div class="input-field col s8 black-text">
+            <i class="material-icons prefix">play_circle_outline</i>
+            <input type="text" id="in" class="white" placeholder="Digite uma mensagem">
+        </div>
+    </div>
+
+    <form>
+    </form>
+
+
+    <script>
+      function sse() {
+        var source = new EventSource('/stream');
+        var out = document.getElementById('out');
+          source.onmessage = function(e) {
+        // XSS in chat is fun
+        out.innerHTML =  e.data + '<br>' + out.innerHTML;
+        };
+      }
+      $('#in').keyup(function(e){
+        if (e.keyCode == 13) {
+          $.post('/post', {'message': $(this).val()});
+          $(this).val('');
+        }
+      });
+      sse();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+
+  </body>
+</html>
